@@ -7,12 +7,33 @@
     <header><%- include("../partials/header") %></header>
     <h1>Create Account</h1>
 
-    <form action="/register" method="post">
+    <form>
+      <label for="username">Username</label>
       <input type="text" name="username" placeholder="username" />
-      <input type="email" name="email" placeholder="email" />
+      <div class="username error"></div>
+      <label for="email">Email</label>
+      <input type="text" name="email" placeholder="email" />
+      <div class="email error"></div>
+      <label for="password">Password</label>
       <input type="password" name="password" placeholder="password" />
+      <div class="password error"></div>
       <button type="submit">Sign Up</button>
     </form>
+
+    <script>
+      const form = document.querySelector('form');
+      form.addEventListener("submit", (e)=> {
+        // prevent form from default submit
+        e.preventDefault();
+        // get form values;
+        const username = form.username.value;
+        const email = form.email.value;
+        const password = form.password.value;
+  
+        console.log(username, email, password);
+      })
+    </script>
+
     <footer><%- include("../partials/footer") %></footer>
   </body>
 </html>
