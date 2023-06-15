@@ -1,7 +1,6 @@
 {
   "name": "user-auth",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "type": "module",
   "scripts": {
@@ -18,5 +17,6 @@
     "mongoose": "^7.2.4",
     "nodemon": "^2.0.22",
     "validator": "^13.9.0"
-  }
+  },
+  "description": ""
 }
