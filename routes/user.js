@@ -7,6 +7,7 @@ import {
   dashboard,
   loginUser,
 } from "../controllers/user.js";
+import requireAuth from "../middleware/authMiddleware.js";
 const router = Router();
 
 // route get home page
@@ -24,7 +25,7 @@ router.get("/login", login);
 // rout login user
 router.post("/login", loginUser);
 
-// route get user dashboard
-router.get("/dashboard", dashboard);
+// route get user dashboard if logged in
+router.get("/dashboard", requireAuth, dashboard);
 
 export default router;
