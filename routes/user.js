@@ -5,6 +5,7 @@ import {
   register,
   login,
   dashboard,
+  loginUser,
 } from "../controllers/user.js";
 const router = Router();
 
@@ -19,6 +20,9 @@ router.post("/register", registerUser);
 
 // route get login page
 router.get("/login", login);
+
+// rout login user
+router.post("/login", loginUser);
 
 // route get user dashboard
 router.get("/dashboard", dashboard);

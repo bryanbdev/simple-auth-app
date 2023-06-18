@@ -1,4 +1,5 @@
 import UserModel from "../model/user.js";
+import jwt from "jsonwebtoken";
 
 // handle errors
 const handleErrors = (err) => {
@@ -22,6 +23,16 @@ const handleErrors = (err) => {
     });
   }
 
+  // incorrect email
+  if (err.message === "incorrect email") {
+    errors.email = "That email is not registered";
+  }
+
+  // incorrect password
+  if (err.message === "incorrect password") {
+    errors.password = "That password is incorrect...try again.";
+  }
+
   // duplicate error code
   if (err.code === 11000) {
     // get the name of the unique duplicate key property "username" or "email"
@@ -33,6 +44,18 @@ const handleErrors = (err) => {
   }
 
   return errors;
+};
+
+// creates web token
+// equvialent to 3 days (in seconds)
+const maxAge = 3 * 24 * 60 * 60; //3days 24hours 60mintues 60seconds
+const createToken = (id) => {
+  // first argument ---> pass in the payload => data from backend server
+  // second argument ---> create a secret to access & secure the jwt
+  // third argument ---> optional object (can expire the jwt)
+  return jwt.sign({ id }, "goody", {
+    expiresIn: maxAge,
+  });
 };
 
 // home page
@@ -56,11 +79,12 @@ export const register = async (req, res) => {
 // create new user
 export const registerUser = async (req, res) => {
   try {
-    const user = await UserModel.create(req.body);
-    res.render("pages/dashboard", {
-      user,
-      message: `${user.username} successfully registered`,
-    });
+    const user = await UserModel.create(req.body); //create user
+    const token = createToken(user._id);
+    //options -> {httpOnly: true} no can't access the cookie through js frontend
+    // options -> {secure: true} cookies are only accessed on https sites
+    res.cookie("jwt", token, { httpOnly: true, maxAge: maxAge * 1000 });
+    res.status(201).json({ user: user._id });
   } catch (error) {
     const errors = handleErrors(error);
     res.status(400).json({ errors });
@@ -73,6 +97,22 @@ export const login = async (req, res) => {
     res.render("pages/login");
   } catch (error) {
     console.log(`OPPPS...SOMETHING WENT WRONG: ${error}`);
+  }
+};
+
+// login user
+export const loginUser = async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const user = await UserModel.login(email, password);
+    const token = createToken(user._id);
+    // options -> {httpOnly: true} no can't access the cookie through js frontend
+    // options -> {secure: true} cookies are only accessed on https sites
+    res.cookie("jwt", token, { httpOnly: true, maxAge: maxAge * 1000 });
+    res.status(200).json({ user: user._id });
+  } catch (error) {
+    const errors = handleErrors(error);
+    res.status(400).json({ errors });
   }
 };
 

@@ -19,7 +19,7 @@ const UserSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: true,
+      required: [true, "Please enter password"],
       minlength: [3, "Password must be longer than 3 characters"],
     },
   },
@@ -46,6 +46,19 @@ UserSchema.pre("save", async function (next) {
 
   next();
 });
+
+// create a method on the user model to login user "login" <-- name of method
+UserSchema.statics.login = async function (email, password) {
+  const user = await this.findOne({ email });
+  if (user) {
+    const isAuth = await bcrypt.compare(password, user.password); // compare user typed in password vs hash pasword in database
+    if (isAuth) {
+      return user;
+    }
+    throw Error("incorrect password");
+  }
+  throw Error("incorrect email");
+};
 
 const UserModel = mongoose.model("Users", UserSchema);
 export default UserModel;
