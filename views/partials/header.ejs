@@ -1,7 +1,12 @@
 <nav>
   <h1>User Auth</h1>
   <ul>
+    <% if (user) { %>
+    <li>Welcome, <%= user.username %></li>
+    <li><a href="/logout">Log out</a></li>
+    <% } else { %>
     <li><a href="/register">Sign Up</a></li>
-    <li><a href="/login">Login</a></li>
+    <li><a href="/login">Log in</a></li>
+    <% } %>
   </ul>
 </nav>

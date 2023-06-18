@@ -6,9 +6,13 @@ import {
   login,
   dashboard,
   loginUser,
+  logout,
 } from "../controllers/user.js";
-import requireAuth from "../middleware/authMiddleware.js";
+import { checkUser, requireAuth } from "../middleware/authMiddleware.js";
 const router = Router();
+
+// checks for user in every get request route
+router.get("*", checkUser);
 
 // route get home page
 router.get("/", home);
@@ -27,5 +31,8 @@ router.post("/login", loginUser);
 
 // route get user dashboard if logged in
 router.get("/dashboard", requireAuth, dashboard);
+
+// route logout user
+router.get("/logout", requireAuth, logout);
 
 export default router;

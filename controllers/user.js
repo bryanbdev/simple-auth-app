@@ -124,3 +124,15 @@ export const dashboard = async (req, res) => {
     console.log(`OPPPS...SOMETHING WENT WRONG: ${error}`);
   }
 };
+
+// handle logout user
+export const logout = async (req, res) => {
+  try {
+    // replace the cookie value will empty string
+    // removes the jwt token
+    res.cookie("jwt", "", { maxAge: 1 }); // expires in 1 millisecond
+    res.redirect("/");
+  } catch (error) {
+    console.log(error);
+  }
+};
